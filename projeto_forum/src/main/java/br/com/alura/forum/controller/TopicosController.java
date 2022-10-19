@@ -27,64 +27,55 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/topicos")
 public class TopicosController {
-	
-	@Autowired
-	private TopicoRepository topicoRepository;
-	
-	@Autowired
-	private CursoRepository cursoRepository;
+
+    @Autowired
+    private TopicoRepository topicoRepository;
+
+    @Autowired
+    private CursoRepository cursoRepository;
 
 
-	@GetMapping
-	@Cacheable(value = "listaDeTopicos")
-	public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
-	 	@PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 3) Pageable pagina) {
+    @GetMapping
+    @Cacheable(value = "listaDeTopicos")
+    public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
+                                 @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 3) Pageable pagina) {
 
-		if (nomeCurso == null) {
-			Page<Topico> topicos = topicoRepository.findAll(pagina);
-			return TopicoDto.converter(topicos);
-		} else {
-			Page<Topico> topicos = topicoRepository.findByCursoNome(nomeCurso, pagina);
-			return TopicoDto.converter(topicos);
-		}
-	}
+        if (nomeCurso == null) {
+            return TopicoDto.converter(topicoRepository.findAll(pagina));
+        } else return TopicoDto.converter(topicoRepository.findByCursoNome(nomeCurso, pagina));
+    }
 
-	@PostMapping
-	@Transactional
-	@CacheEvict(value = "listaDeTopicos", allEntries = true)
-	public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
-		Topico topico = form.converter(cursoRepository);
-		topicoRepository.save(topico);
-		
-		URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
-		return ResponseEntity.created(uri).body(new TopicoDto(topico));
-	}
+    @PostMapping
+    @Transactional
+    @CacheEvict(value = "listaDeTopicos", allEntries = true)
+    public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
+        Topico topico = form.converter(cursoRepository);
+        topicoRepository.save(topico);
+        URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+        return ResponseEntity.created(uri).body(new TopicoDto(topico));
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<TopicoDetalhadoDto> detalhar(@PathVariable Long id){
-		Optional<Topico> topicoOptional = topicoRepository.findById(id);
-		return topicoOptional.map(topico -> ResponseEntity.ok(new TopicoDetalhadoDto(topico))).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicoDetalhadoDto> detalhar(@PathVariable Long id) {
+        return topicoRepository.findById(id).map(topico -> ResponseEntity.ok(new TopicoDetalhadoDto(topico))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@PutMapping("/{id}")
-	@Transactional
-	@CacheEvict(value = "listaDeTopicos", allEntries = true)
-	public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaForm form){
-		Optional<Topico> topicoOptional = topicoRepository.findById(id);
-		Topico topicoAtualizar = form.atualizar(id, topicoRepository);
-		return topicoOptional.map(topico -> ResponseEntity.ok(new TopicoDto(topicoAtualizar))).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @PutMapping("/{id}")
+    @Transactional
+    @CacheEvict(value = "listaDeTopicos", allEntries = true)
+    public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaForm form) {
+        Optional<Topico> topicoOptional = topicoRepository.findById(id);
+        return topicoOptional.map(topico -> ResponseEntity.ok(new TopicoDto(form.atualizar(id, topicoRepository)))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@DeleteMapping("/{id}")
-	@Transactional
-	@CacheEvict(value = "listaDeTopicos", allEntries = true)
-	public ResponseEntity<?> remover(@PathVariable Long id) {
-		Optional<Topico> optional = topicoRepository.findById(id);
-		if (optional.isPresent()) {
-			topicoRepository.deleteById(id);
-			return ResponseEntity.ok().build();
-		}
-		return ResponseEntity.notFound().build();
-
-	}
+    @DeleteMapping("/{id}")
+    @Transactional
+    @CacheEvict(value = "listaDeTopicos", allEntries = true)
+    public ResponseEntity<?> remover(@PathVariable Long id) {
+        if (topicoRepository.findById(id).isPresent()) {
+            topicoRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
