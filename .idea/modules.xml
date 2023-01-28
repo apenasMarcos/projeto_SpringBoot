@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/projeto_forum/forum.iml" filepath="$PROJECT_DIR$/projeto_forum/forum.iml" />
-      <module fileurl="file://$PROJECT_DIR$/projeto_monitoramento/monitoramento.iml" filepath="$PROJECT_DIR$/projeto_monitoramento/monitoramento.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/projeto_SpringBoot.iml" filepath="$PROJECT_DIR$/.idea/projeto_SpringBoot.iml" />
     </modules>
   </component>
