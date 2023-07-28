@@ -1,0 +1,6 @@
+.idea/
+.iml
+.gradle/, build.gradle e gradle.properties
+target/ 
+build/
+.idea_modules/
