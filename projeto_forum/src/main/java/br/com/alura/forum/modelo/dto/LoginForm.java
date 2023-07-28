@@ -1,4 +1,4 @@
-package br.com.alura.forum.controller.form;
+package br.com.alura.forum.modelo.dto;
 
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

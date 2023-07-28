@@ -1,10 +1,7 @@
-package br.com.alura.forum.service;
+package br.com.alura.forum.service.security;
 
-import br.com.alura.forum.config.validacao.security.TokenService;
-import br.com.alura.forum.controller.dto.TokenDto;
-
-import br.com.alura.forum.controller.form.LoginForm;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.alura.forum.modelo.dto.LoginForm;
+import br.com.alura.forum.modelo.dto.TokenDto;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,11 +13,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
+
+    public AuthService(AuthenticationManager authenticationManager, TokenService tokenService) {
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+    }
 
     public ResponseEntity<TokenDto> autenticarUsuario(LoginForm form){
         UsernamePasswordAuthenticationToken dadosLogin = form.converter();

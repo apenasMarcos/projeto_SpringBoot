@@ -1,8 +1,7 @@
-package br.com.alura.forum.config.validacao.security;
+package br.com.alura.forum.service.security;
 
 import br.com.alura.forum.modelo.Usuario;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;

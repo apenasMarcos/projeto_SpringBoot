@@ -1,4 +1,4 @@
-package br.com.alura.forum.controller.dto;
+package br.com.alura.forum.modelo.dto;
 
 public class TokenDto {
     private String token;

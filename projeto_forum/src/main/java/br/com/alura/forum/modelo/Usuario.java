@@ -1,6 +1,5 @@
 package br.com.alura.forum.modelo;
 
-import org.hibernate.annotations.ManyToAny;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
