@@ -1,16 +1,11 @@
 package br.com.alura.forum.modelo.dto;
 
+import lombok.Getter;
+
+@Getter
 public class TokenDto {
-    private String token;
-    private String bearer;
-
-    public String getToken() {
-        return token;
-    }
-
-    public String getBearer() {
-        return bearer;
-    }
+    private final String token;
+    private final String bearer;
 
     public TokenDto(String token, String bearer) {
         this.token = token;

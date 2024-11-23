@@ -2,7 +2,6 @@ package br.com.alura.forum.service.security;
 
 import br.com.alura.forum.modelo.dto.LoginForm;
 import br.com.alura.forum.modelo.dto.TokenDto;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,13 +21,13 @@ public class AuthService {
         this.tokenService = tokenService;
     }
 
-    public ResponseEntity<TokenDto> autenticarUsuario(LoginForm form){
+    public ResponseEntity<TokenDto> autenticarUsuario(LoginForm form) {
         UsernamePasswordAuthenticationToken dadosLogin = form.converter();
-        try{
+        try {
             Authentication authentication = authenticationManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
             return ResponseEntity.ok(new TokenDto(token, "Bearer"));
-        } catch (AuthenticationException ex){
+        } catch (AuthenticationException ex) {
             return ResponseEntity.badRequest().build();
         }
     }

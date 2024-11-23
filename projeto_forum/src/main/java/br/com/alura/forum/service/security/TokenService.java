@@ -30,15 +30,15 @@ public class TokenService {
                 .setSubject(logado.getId().toString())
                 .setIssuedAt(hoje)
                 .setExpiration(dataExp)
-                .signWith(SignatureAlgorithm.HS256 ,secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
     public boolean isTokenValido(String token) {
-        try{
+        try {
             Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
             return true;
-        } catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

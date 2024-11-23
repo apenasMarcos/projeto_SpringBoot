@@ -15,43 +15,47 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import javax.validation.Valid;
 
 
 @RestController
 @RequestMapping("/topicos")
 public class TopicosController {
-	
-	@Autowired
-	private TopicosService topicosService;
+
+    private final TopicosService topicosService;
+
+    public TopicosController(TopicosService topicosService) {
+        this.topicosService = topicosService;
+    }
 
 
-	@GetMapping
-	@Cacheable(value = "listaDeTopicos")
-	public Page<TopicoDto> listar(@RequestParam(required = false) String nomeCurso, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 3) Pageable pagina) {
-		return topicosService.listarTopicos(nomeCurso, pagina);
-	}
+    @GetMapping
+    @Cacheable(value = "listaDeTopicos")
+    public Page<TopicoDto> listar(@RequestParam(required = false) String nomeCurso, @PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 3) Pageable pagina) {
+        return topicosService.listarTopicos(nomeCurso, pagina);
+    }
 
-	@PostMapping
-	@CacheEvict(value = "listaDeTopicos", allEntries = true)
-	public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
-		return topicosService.cadastrarTopico(form, uriBuilder);
-	}
+    @PostMapping
+    @CacheEvict(value = "listaDeTopicos", allEntries = true)
+    public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
+        return topicosService.cadastrarTopico(form, uriBuilder);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<TopicoDetalhadoDto> detalhar(@PathVariable Long id){
-		return topicosService.detalharTopico(id);
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicoDetalhadoDto> detalhar(@PathVariable Long id) {
+        return topicosService.detalharTopico(id);
+    }
 
-	@PutMapping("/{id}")
-	@CacheEvict(value = "listaDeTopicos", allEntries = true)
-	public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaForm form){
-	return topicosService.atualizarTopico(id, form);
-	}
+    @PutMapping("/{id}")
+    @CacheEvict(value = "listaDeTopicos", allEntries = true)
+    public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody AtualizaForm form) {
+        return topicosService.atualizarTopico(id, form);
+    }
 
-	@DeleteMapping("/{id}")
-	@CacheEvict(value = "listaDeTopicos", allEntries = true)
-	public ResponseEntity<?> remover(@PathVariable Long id) {
-		return topicosService.removerTopico(id);
-	}
+    @DeleteMapping("/{id}")
+    @CacheEvict(value = "listaDeTopicos", allEntries = true)
+    public ResponseEntity<?> remover(@PathVariable Long id) {
+        return topicosService.removerTopico(id);
+    }
 }

@@ -7,12 +7,12 @@ import br.com.alura.forum.controller.form.TopicoForm;
 import br.com.alura.forum.modelo.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Optional;
@@ -20,13 +20,16 @@ import java.util.Optional;
 @Service
 public class TopicosService {
 
-    @Autowired
-    private TopicoRepository topicoRepository;
+    private final TopicoRepository topicoRepository;
 
-    @Autowired
-    private CursoRepository cursoRepository;
+    private final CursoRepository cursoRepository;
 
-    public Page<TopicoDto> listarTopicos(String nomeCurso, Pageable pagina){
+    public TopicosService(TopicoRepository topicoRepository, CursoRepository cursoRepository) {
+        this.topicoRepository = topicoRepository;
+        this.cursoRepository = cursoRepository;
+    }
+
+    public Page<TopicoDto> listarTopicos(String nomeCurso, Pageable pagina) {
 
         Page<Topico> topicos;
         if (nomeCurso == null || nomeCurso.isEmpty()) {
@@ -38,7 +41,7 @@ public class TopicosService {
     }
 
     @Transactional
-    public ResponseEntity<TopicoDto> cadastrarTopico(TopicoForm form, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<TopicoDto> cadastrarTopico(TopicoForm form, UriComponentsBuilder uriBuilder) {
         Topico topico = form.converter(cursoRepository);
         topicoRepository.save(topico);
 
@@ -46,13 +49,13 @@ public class TopicosService {
         return ResponseEntity.created(uri).body(new TopicoDto(topico));
     }
 
-    public ResponseEntity<TopicoDetalhadoDto> detalharTopico(Long id){
+    public ResponseEntity<TopicoDetalhadoDto> detalharTopico(Long id) {
         Optional<Topico> topicoOptional = topicoRepository.findById(id);
         return topicoOptional.map(topico -> ResponseEntity.ok(new TopicoDetalhadoDto(topico))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Transactional
-    public  ResponseEntity<TopicoDto> atualizarTopico(Long id, AtualizaForm form){
+    public ResponseEntity<TopicoDto> atualizarTopico(Long id, AtualizaForm form) {
         Optional<Topico> topicoOptional = topicoRepository.findById(id);
         Topico topicoAtualizar = form.atualizar(id, topicoRepository);
         return topicoOptional.map(topico -> ResponseEntity.ok(new TopicoDto(topicoAtualizar))).orElseGet(() -> ResponseEntity.notFound().build());
